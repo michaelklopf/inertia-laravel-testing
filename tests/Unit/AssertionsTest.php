@@ -355,6 +355,24 @@ class AssertionsTest extends TestCase
         $response->assertInertiaHas('example.nested', $resource);
     }
 
+    public function test_the_inertia_page_has_a_nested_prop_with_a_data_attribute_using_a_responsable()
+    {
+        Model::unguard();
+        $resource = JsonResource::make(User::make([
+            'data' => 'Example',
+        ]));
+
+        $response = $this->makeMockResponse(
+            Inertia::render('test-component', [
+                'example' => [
+                    'nested' => $resource,
+                ],
+            ])
+        );
+
+        $response->assertInertiaHas('example.nested.data', 'Example');
+    }
+
     public function test_the_inertia_page_does_not_have_a_nested_prop_with_a_value_using_a_responsable()
     {
         Model::unguard();
@@ -557,6 +575,31 @@ class AssertionsTest extends TestCase
         );
 
         $response->assertInertiaCount('baz.nested', 2);
+    }
+
+    public function test_the_inertia_page_with_nested_key_and_a_data_attribute_is_matching_count()
+    {
+        Model::unguard();
+        $resource = JsonResource::make(User::make([
+            'data' => [
+                [
+                    'name' => 'Example',
+                ],
+                [
+                    'name' => 'Another',
+                ],
+            ],
+        ]));
+
+        $response = $this->makeMockResponse(
+            Inertia::render('test-component', [
+                'example' => [
+                    'nested' => $resource,
+                ],
+            ])
+        );
+
+        $response->assertInertiaCount('example.nested.data', 2);
     }
 
     public function test_the_inertia_page_is_not_matching_count()

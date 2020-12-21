@@ -86,7 +86,7 @@ class Assertions
         return function ($key, $count) {
             $this->assertInertia();
 
-            PHPUnit::assertCount($count, Arr::get($this->inertiaProps(), $key, []));
+            PHPUnit::assertCount($count, data_get($this->inertiaProps(), $key, []));
 
             return $this;
         };
@@ -101,7 +101,7 @@ class Assertions
                 return $this->viewData('page')['props'];
             }
 
-            return Arr::get($this->viewData('page')['props'], $key);
+            return data_get($this->viewData('page')['props'], $key);
         };
     }
 }
